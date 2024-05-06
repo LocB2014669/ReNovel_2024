@@ -8,7 +8,7 @@ export const createPostCategory = async (req, res, next) => {
     const postCategory = await PostCategory.findOne({ title });
 
     if (postCategory) {
-      const error = new Error("Category da duoc tao");
+      const error = new Error("Thể loại đã được tạo");
       return next(error);
     }
 

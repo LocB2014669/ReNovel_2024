@@ -6,25 +6,25 @@ export const createRating = async (req, res, next) => {
     const { postId } = req.params;
     const { score } = req.body;
 
-    // Kiểm tra xem bài viết có tồn tại không
-    const existingRating = await Rating.findOne({
+    // Kiểm tra xem người dùng đã đánh giá bài viết trước đó chưa
+    let existingRating = await Rating.findOne({
       post: postId,
       user: req.user._id,
     });
+
     if (existingRating) {
-      const error = new Error("Bài viết đã được bạn đánh giá");
-      return next(error);
+      // Nếu người dùng đã đánh giá trước đó, cập nhật lại đánh giá của họ
+      existingRating.score = score;
+      await existingRating.save();
+    } else {
+      // Nếu người dùng chưa đánh giá trước đó, tạo một đánh giá mới
+      existingRating = new Rating({
+        score,
+        user: req.user._id,
+        post: postId,
+      });
+      await existingRating.save();
     }
-
-    // Tạo một đối tượng Rating mới
-    const newRating = new Rating({
-      score,
-      user: req.user._id,
-      post: postId,
-    });
-
-    // Lưu đánh giá vào cơ sở dữ liệu
-    await newRating.save();
 
     // Tính toán trung bình của các đánh giá cho bài viết
     const ratings = await Rating.find({ post: postId });
@@ -34,11 +34,11 @@ export const createRating = async (req, res, next) => {
     // Cập nhật trường averageRating trong model Post
     await Post.findByIdAndUpdate(postId, { averageRating });
 
-    res.status(201).json({ message: "Đánh giá đã được lưu thành công." });
+    res.status(201).json({ message: "Đánh giá đã được cập nhật thành công." });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Lỗi khi lưu đánh giá." });
-  } 
+    res.status(500).json({ error: "Lỗi khi cập nhật đánh giá." });
+  }
 };
 
 export const getRatingsByPostId = async (req, res) => {

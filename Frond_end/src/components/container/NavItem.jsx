@@ -37,7 +37,7 @@ export const NavItem = ({ item, dataTags }) => {
                 dropDown ? "block" : "hidden"
               } lg:hidden transition-all duration-500 pt-4 lg:bottom-0 lg:-left-5 w-max lg:absolute lg:transform lg:translate-y-full lg:group-hover:block`}
             >
-              <ul className="flex flex-col overflow-hidden lg:shadow-lg rounded-lg bg-violet lg:bg-white text-center z-30 list-none">
+              <ul className="flex flex-col overflow-hidden lg:shadow-lg rounded-lg bg-violet lg:bg-white dark:bg-base-200 text-center z-30 list-none">
                 {dataTags.map((item, index) => (
                   <Link
                     to={`/articles/?tags=${item._id}`}

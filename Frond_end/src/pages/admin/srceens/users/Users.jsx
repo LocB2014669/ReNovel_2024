@@ -30,7 +30,7 @@ const Users = () => {
     isFetching,
     refetch,
   } = useQuery({
-    queryFn: () => getAllUsers(),
+    queryFn: () => getAllUsers({ email: searchKeyWord }),
     queryKey: ["users"],
     onError: (error) => {
       toast.error(error.message);
@@ -106,14 +106,14 @@ const Users = () => {
           <div className="text-end">
             <form
               onSubmit={submitSearchKeyWord}
-              className="flex flex-col justify-center lg:w-3/4 max-w-sm space-y-3 w-full md:flex-row md:w-full md:space-x-3 md:space-y-0"
+              className="flex flex-col justify-center  max-w-sm space-y-3 w-full md:flex-row md:w-full md:space-x-3 md:space-y-0"
             >
               <div className=" relative ">
                 <input
                   type="text"
                   id='"form-subscribe-Filter'
                   className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  placeholder="Nhập tên bài đăng..."
+                  placeholder="Nhập email tìm kiếm"
                   onChange={searchKeyWordHandler}
                   value={searchKeyWord}
                 />
@@ -131,34 +131,34 @@ const Users = () => {
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal">
               <thead>
-                <tr>
+                <tr className="bg-white dark:bg-base-200 text-gray-800 dark:text-dark-light ">
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left uppercase border-b border-gray-200"
                   >
                     Tên
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left uppercase border-b border-gray-200 w-1/6"
                   >
                     Email
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left uppercase border-b border-gray-200 w-1/6"
                   >
                     Trang Thái
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left uppercase border-b border-gray-200 w-1/6"
                   >
                     Loại Tài Khoản
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left uppercase border-b border-gray-200 w-1/6"
                   ></th>
                 </tr>
               </thead>
@@ -175,44 +175,57 @@ const Users = () => {
                   </td>
                 ) : (
                   userData?.map((item) => (
-                    <tr key={item._id}>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 ">
-                        <div className="flex items-center">
+                    <tr
+                      key={item._id}
+                      className="bg-white dark:bg-base-200 text-gray-900 dark:text-dark-light"
+                    >
+                      <td className="px-5 py-5 text-sm border-b border-gray-200 ">
+                        <div className="flex items-center gap-x-2">
+                          <div>
+                            <img
+                              className="mx-auto object-cover rounded-full h-10 w-10"
+                              src={
+                                item.avatar
+                                  ? stable.UPLOAD_FOLDER_BASE_URL + item.avatar
+                                  : images.UserLogo
+                              }
+                              alt=""
+                            />
+                          </div>
                           <div className="flex-shrink-0">
                             <span>{item.name}</span>
                           </div>
-                          <div className="ml-3 w-full truncate">
-                            <p className="text-gray-900 whitespace-no-wrap text-base italic hidden lg:block"></p>
-                          </div>
                         </div>
                       </td>
-                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200">
-                        <p className="text-gray-900 whitespace-no-wrap">
-                          {item.email}
-                        </p>
+                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap border-b border-gray-200">
+                        <p className=" whitespace-no-wrap">{item.email}</p>
                       </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                      <td className="px-5 py-5 text-sm border-b border-gray-200">
                         <p
                           className={`whitespace-no-wrap text-nowrap font-semibold  ${
-                            item.check === 1
+                            item.admin
+                              ? "text-orange-500"
+                              : item.check === 1
                               ? "text-blue-600"
                               : item.check === 2
                               ? "text-green-500"
                               : item.check === 0
                               ? "text-violet"
-                              : "text-orange-500"
+                              : "text-transparent"
                           }`}
                         >
-                          {item.check === 1
+                          {item.admin
+                            ? "Sếp"
+                            : item.check === 1
                             ? "Chờ xác nhận"
                             : item.check === 2
                             ? "Thuyết Giả"
                             : item.check === 0
-                            ? "Đọc giả"
-                            : "Sếp"}
+                            ? "Đọc Lỗi"
+                            : "Lỗi"}
                         </p>
                       </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                      <td className="px-5 py-5 text-sm border-b border-gray-200">
                         <span className="relative inline-block px-3 py-1 font-semibold leading-tight ">
                           {/* <span
                             aria-hidden="true"
@@ -227,20 +240,25 @@ const Users = () => {
                           </span>
                         </span>
                       </td>
-                      <td className="px-5 py-5 text-sm font-bold bg-white border-b border-gray-200 space-x-5">
-                        <div className="flex items-center gap-3">
-                          <button
-                            disabled={isLoadingDeleteUser}
-                            type="button"
-                            className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
-                            onClick={() =>
-                              handleDeleteUser({
-                                userId: item?._id,
-                              })
-                            }
-                          >
-                            Xoá
-                          </button>
+                      <td className="px-5 py-5 text-sm font-bold border-b border-gray-200 space-x-5">
+                        <div className="flex items-center gap-3 font-bold">
+                          {" "}
+                          {!item.admin && (
+                            <div className="bg-red-500 text-white px-3 py-2 rounded-lg bg-opacity-100">
+                              <button
+                                disabled={isLoadingDeleteUser}
+                                type="button"
+                                className="hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
+                                onClick={() =>
+                                  handleDeleteUser({
+                                    userId: item?._id,
+                                  })
+                                }
+                              >
+                                Xoá
+                              </button>
+                            </div>
+                          )}
                           {item.admin || item.check === 0 ? (
                             ""
                           ) : item.check === 2 ? (

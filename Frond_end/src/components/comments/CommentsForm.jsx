@@ -17,9 +17,9 @@ const CommentsForm = ({
   // console.log(formCancel);
   return (
     <form onSubmit={submitHanlder}>
-      <div className="flex flex-col items-end border border-violet rounded-lg p-4">
+      <div className="flex flex-col items-end border border-violet rounded-lg p-4 ">
         <textarea
-          className="w-full focus:outline-none resize-none"
+          className="w-full focus:outline-none resize-none dark:bg-base-100 dark:text-dark-light"
           placeholder="Hãy để lại bình luận tại đây..."
           rows="5"
           value={value}

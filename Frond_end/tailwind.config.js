@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: "class", 
   theme: {
     extend: {
       colors: {
@@ -11,6 +12,7 @@ export default {
           light: "#5A7184",
           hard: "#0D2436",
           soft: "#183B56",
+          DEFAULT: "#0D2436",
         },
       },
       fontFamily: {
@@ -19,13 +21,8 @@ export default {
       },
     },
   },
-  plugins: [require("daisyui"),],
-
-  // daisyUI config (optional - here are the default values)
+  plugins: [require("daisyui")],
   daisyui: {
-    themes: ["light", "dark"], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
-    base: false, // applies background color and foreground color for root element by default
-    styled: true, // include daisyUI colors and design decisions for all components
-    utils: true, // adds responsive and modifier utility classes
+    themes: ["light", "dark"],
   },
 };

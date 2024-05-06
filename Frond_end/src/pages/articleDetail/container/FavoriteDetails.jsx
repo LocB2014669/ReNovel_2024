@@ -18,6 +18,7 @@ export const FavoriteDetails = ({ userState, postId }) => {
   } = useQuery({
     queryFn: () => getFavoriteByUser({ userId }),
     queryKey: ["favorites"],
+    enabled: userId != undefined,
     onError: (error) => {
       toast.error(error.message);
       console.log(error);

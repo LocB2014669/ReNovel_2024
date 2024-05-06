@@ -1,5 +1,6 @@
 import uploadAvatar from "../middleware/uploadAvatarMiddleware";
 import Comment from "../models/Comment";
+import LibraryPdf from "../models/LibraryPdf";
 import Post from "../models/Post";
 // import User from "../models/User";
 import fileRemove from "../utils/fileRemove";
@@ -94,11 +95,13 @@ export const updatePost = async (req, res, next) => {
 export const deletePost = async (req, res, next) => {
   try {
     const post = await Post.findOneAndDelete({ slug: req.params.slug });
-
     if (!post) {
       const error = new Error("Không tìm ra bài viết");
       return next(error);
     }
+    fileRemove(post.photo);
+    await LibraryPdf.findOneAndDelete({ post: post._id });
+
     await Comment.deleteMany({ post: post._id });
     return res.json({
       message: "Bài đăng đã được xóa",
@@ -118,6 +121,10 @@ export const getPostDetail = async (req, res, next) => {
       {
         path: "category",
         select: ["title"],
+      },
+      {
+        path: "tags",
+        select: "title",
       },
       {
         path: "comments",
@@ -177,7 +184,7 @@ export const getAllPosts = async (req, res, next) => {
       where.status = statusFilter;
     }
     if (tagsFilter) {
-      where.tags = { $in: tagsFilter.split(",") }; // Filter by tags
+      where.tags = { $in: tagsFilter.split(",") };
     }
 
     let query = Post.find(where);
@@ -219,7 +226,7 @@ export const getAllPosts = async (req, res, next) => {
       .populate([
         {
           path: "user",
-          select: ["avatar", "name", "verified"],
+          select: ["avatar", "name", "admin"],
         },
         {
           path: "category",
@@ -245,7 +252,7 @@ export const getPostUser = async (req, res, next) => {
     const posts = await Post.find({ user: userId }).populate([
       {
         path: "user",
-        select: ["avatar", "name"],
+        select: ["avatar", "name", "admin"],
       },
       {
         path: "tags",

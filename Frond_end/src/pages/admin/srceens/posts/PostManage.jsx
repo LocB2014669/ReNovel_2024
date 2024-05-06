@@ -29,7 +29,12 @@ const PostManage = () => {
     isFetching,
     refetch,
   } = useQuery({
-    queryFn: () => getAllPosts(searchKeyWord, currentPage),
+    queryFn: () =>
+      getAllPosts({
+        searchKeyWord: searchKeyWord,
+        page: currentPage,
+        limit: 5,
+      }),
     queryKey: ["posts"],
     onError: (error) => {
       toast.error(error.message);
@@ -68,6 +73,7 @@ const PostManage = () => {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries(["posts"]);
+        refetch();
         toast.success("Post đã được Xóa");
       },
       onError: (error) => {
@@ -90,6 +96,7 @@ const PostManage = () => {
       },
       onSuccess: (data) => {
         toast.success("Post đã được Cap nhat");
+        navigate("/admin/posts/manage");
       },
       onError: (error) => {
         toast.error(error.message);
@@ -108,7 +115,6 @@ const PostManage = () => {
       postIds: postIds,
     });
     refetch();
-    window.location.reload();
   };
 
   const { mutate: mutateCreatePost, isLoading: isLoadingCreatePost } =
@@ -135,13 +141,27 @@ const PostManage = () => {
   };
 
   return (
-    <div className="container lg:px-4 mx-auto sm:px-8 h-[150vh]">
+    <div className="container lg:px-4 mx-auto sm:px-8 max-h-screen">
       {/* max-w-3xl */}
       <div className="py-8">
         <div className="flex lg:flex-row flex-col justify-between w-full mb-1 sm:mb-0">
           <h2 className="lg:text-2xl text-xl mb-3 lg:mb-0 leading-tight text-violet">
             Danh Sách Bài Đăng
           </h2>
+          <div className="overflow-hidden">
+            <div
+              className={`w-full flex justify-end transition-transform duration-500 transform ${
+                isCheckDisplay ? "translate-y-0" : "translate-y-full"
+              }`}
+            >
+              <button
+                onClick={handleUpdate}
+                className="focus:outline-none text-nowrap text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+              >
+                Cập nhật
+              </button>
+            </div>
+          </div>
           <div className=" flex text-center justify-between gap-x-3">
             <form
               onSubmit={submitSearchKeyWord}
@@ -151,7 +171,7 @@ const PostManage = () => {
                 <input
                   type="text"
                   id='"form-subscribe-Filter'
-                  className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-md text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   placeholder="Nhập tên bài đăng..."
                   onChange={searchKeyWordHandler}
                   value={searchKeyWord}
@@ -184,40 +204,40 @@ const PostManage = () => {
                 <tr>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 dark:text-dark-light uppercase bg-white border-b border-gray-200 dark:bg-base-200"
                   ></th>
                   <th
                     scope="col"
-                    className="text-nowrap lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="text-nowrap lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 dark:text-dark-light uppercase bg-white border-b border-gray-200 dark:bg-base-200"
                   >
                     Bài đăng
                   </th>
                   <th
                     scope="col"
-                    className="text-nowrap lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="text-nowrap lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 dark:text-dark-light uppercase bg-white border-b border-gray-200 w-1/6 dark:bg-base-200"
                   >
                     Người đăng
                   </th>
                   <th
                     scope="col"
-                    className="text-nowrap  lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="text-nowrap  lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 dark:text-dark-light uppercase bg-white border-b border-gray-200 w-1/6 dark:bg-base-200"
                   >
                     Ngày Cập nhật
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 dark:text-dark-light uppercase bg-white border-b border-gray-200 w-1/6 dark:bg-base-200"
                   >
-                    trạng thái
+                    Tag
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 dark:text-dark-light uppercase bg-white border-b border-gray-200 w-1/6 dark:bg-base-200"
                   ></th>
                 </tr>
               </thead>
               <tbody>
-                {isLoading || isFetching ? (
+                {isLoading ? (
                   <tr>
                     <td colSpan={5} className="text-center py-10 w-full">
                       Loading......
@@ -229,8 +249,11 @@ const PostManage = () => {
                   </td>
                 ) : (
                   postsData?.data.map((item) => (
-                    <tr key={item._id}>
-                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200 ">
+                    <tr
+                      key={item._id}
+                      className="dark:text-dark-light text-gray-900"
+                    >
+                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200 dark:bg-base-200">
                         <div className="relative flex items-center p-3 rounded-full cursor-pointer">
                           <input
                             className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-purple-500 checked:bg-purple-500 checked:before:bg-purple-500 hover:before:opacity-10"
@@ -257,7 +280,7 @@ const PostManage = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 ">
+                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 dark:bg-base-200 ">
                         <div className="flex items-center">
                           <div className="flex-shrink-0">
                             <a href="#" className="relative block">
@@ -269,12 +292,12 @@ const PostManage = () => {
                                       item?.photo
                                     : images.Origin
                                 }
-                                className="mx-auto object-cover rounded-full h-10 w-10"
+                                className="mx-auto object-cover rounded-lg border-violet border h-10 w-10"
                               />
                             </a>
                           </div>
                           <div className="ml-3 w-full truncate">
-                            <p className="text-gray-900 whitespace-no-wrap text-base italic hidden lg:block">
+                            <p className="whitespace-no-wrap text-base italic hidden lg:block">
                               {item?.title.length > 30
                                 ? `${item?.title.substring(0, 30)}...`
                                 : item?.title}
@@ -282,13 +305,11 @@ const PostManage = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200">
-                        <p className="text-gray-900 whitespace-no-wrap">
-                          {item?.user?.name}
-                        </p>
+                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200 dark:bg-base-200">
+                        <p className="whitespace-no-wrap">{item?.user?.name}</p>
                       </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 text-nowrap">
-                        <p className="text-gray-900 whitespace-no-wrap">
+                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 text-nowrap dark:bg-base-200">
+                        <p className="whitespace-no-wrap">
                           {new Date(item.createdAt).toLocaleDateString(
                             "vi-VN",
                             {
@@ -299,30 +320,32 @@ const PostManage = () => {
                           )}
                         </p>
                       </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                        <span className="relative inline-block px-3 py-1 font-semibold leading-tight text-green-900">
+                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 dark:bg-base-200">
+                        <span className="relative inline-block px-3 py-1 font-semibold leading-tight text-violet">
                           <span
                             aria-hidden="true"
-                            className="absolute inset-0 bg-green-200 rounded-full opacity-50"
+                            className="absolute inset-0 bg-violet rounded-full opacity-30"
                           ></span>
-                          <span className="relative">{item.tags?.title}</span>
+                          <span className="relative text-nowrap">{item.tags?.title}</span>
                         </span>
                       </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                        <div className="flex justify-center items-center gap-x-3">
-                          <button
-                            disabled={isLoadingDeletePost}
-                            type="button"
-                            className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
-                            onClick={() =>
-                              deletePostHandler({
-                                slug: item?.slug,
-                                token: userState.userInfo.token,
-                              })
-                            }
-                          >
-                            Xoá
-                          </button>
+                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 dark:bg-base-200">
+                        <div className="flex justify-center items-center gap-x-3 font-bold">
+                          <div className="bg-red-500 px-3 py-2 rounded-lg bg-opacity-100">
+                            <button
+                              disabled={isLoadingDeletePost}
+                              type="button"
+                              className="text-white hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
+                              onClick={() =>
+                                deletePostHandler({
+                                  slug: item?.slug,
+                                  token: userState.userInfo.token,
+                                })
+                              }
+                            >
+                              Xoá
+                            </button>
+                          </div>
                           <Link
                             to={`/admin/posts/manage/edit/${item?.slug}`}
                             className="text-indigo-600 hover:text-indigo-900"
@@ -347,20 +370,6 @@ const PostManage = () => {
             )}
           </div>
           {/* {isCheckDisplay && ( */}
-          <div className="overflow-hidden">
-            <div
-              className={`w-full flex justify-end transition-transform duration-500 transform ${
-                isCheckDisplay ? "translate-y-0" : "translate-y-full"
-              }`}
-            >
-              <button
-                onClick={handleUpdate}
-                className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
-              >
-                Cập nhật
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

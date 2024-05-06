@@ -40,17 +40,20 @@ export const PostManagerUser = () => {
       ) : userState.userInfo?.admin ? (
         <p className="text-green-500 text-xl">Qua Đây Chi??????????</p>
       ) : (
-        <button
-          disabled={isLoadingCreatePost}
-          className="text-start disabled:cursor-not-allowed disabled:opacity-50 border border-purple-400 rounded-lg px-2 py-3 hover:bg-purple-600"
-          onClick={() =>
-            handlerCreateNewPost({
-              token: userState.userInfo?.token,
-            })
-          }
-        >
-          Thêm bài đăng mới
-        </button>
+        <div className="flex items-center justify-between">
+          <button
+            disabled={isLoadingCreatePost}
+            className="text-start disabled:cursor-not-allowed disabled:opacity-50 border border-purple-400 rounded-lg px-2 py-3 hover:bg-purple-600"
+            onClick={() =>
+              handlerCreateNewPost({
+                token: userState.userInfo?.token,
+              })
+            }
+          >
+            Thêm bài đăng mới
+          </button>
+          <p>{userState.userInfo.points}</p>
+        </div>
       )}{" "}
       {/* <TestCreate /> */}
       {userState.userInfo?.check === 2 && <TablePostUser />}

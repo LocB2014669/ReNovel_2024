@@ -24,9 +24,15 @@ const getTagById = async (req, res) => {
 };
 
 // Tạo một tag mới
-const createTag = async (req, res) => {
+const createTag = async (req, res, next) => {
   try {
     const { title } = req.body;
+    const exitingTag = await Tags.findOne({ title });
+
+    if (exitingTag) {
+      const error = new Error("Chủ đề đã được tạo đã được tạo");
+      return next(error);
+    }
     const tag = new Tags({ title });
     await tag.save();
     res.json(tag);

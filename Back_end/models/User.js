@@ -9,9 +9,11 @@ const UserSchema = new Schema(
     email: { type: String, require: true },
     password: { type: String, require: true },
     verified: { type: Boolean, default: false },
-    verificationCode: { type: String, require: false },
+    otp: { type: String, require: false },
+    otpExpires: { type: Date, require: false },
     admin: { type: Boolean, default: false },
     check: { type: Number, default: 0 },
+    points: { type: Number, default: 0 },
   },
   {
     timestamps: true,

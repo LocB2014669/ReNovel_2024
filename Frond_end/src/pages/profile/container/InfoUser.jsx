@@ -87,7 +87,7 @@ export const InfoUser = () => {
         </button>
       </div>
 
-      <div className="w-full max-w-sm mx-auto border border-violet p-4 rounded-2xl">
+      <div className="w-full max-w-md mx-auto border border-violet p-4 rounded-2xl">
         {/* {profileData?.name} */}
         <ProfileAvatar avatar={profileData?.avatar} checkEdit={checkEdit} />
         <form onSubmit={handleSubmit(submitHandler)}>

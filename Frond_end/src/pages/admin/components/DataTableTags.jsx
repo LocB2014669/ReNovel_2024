@@ -36,22 +36,22 @@ export const DataTableTags = ({ data, refetch, onEditTags }) => {
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal table-auto">
               <thead>
-                <tr>
+                <tr className="bg-whie dark:bg-base-200 text-gray-800 dark:text-dark-light">
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left  uppercase  border-b border-gray-200"
                   >
                     Tên Tags
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 "
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left  uppercase  border-b border-gray-200 "
                   >
                     Thời Gian Tạo
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left  uppercase  border-b border-gray-200"
                   ></th>
                 </tr>
               </thead>
@@ -68,14 +68,17 @@ export const DataTableTags = ({ data, refetch, onEditTags }) => {
                   </td>
                 ) : (
                   data?.map((item) => (
-                    <tr key={item._id}>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 ">
+                    <tr
+                      key={item._id}
+                      className="text-gray-900 dark:text-dark-light bg-white dark:bg-base-200"
+                    >
+                      <td className="px-5 py-5 text-sm  border-b border-gray-200 ">
                         <div className="truncate">
                           <p>{item.title}</p>
                         </div>
                       </td>
-                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200">
-                        <p className="text-gray-900 whitespace-no-wrap">
+                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap  border-b border-gray-200">
+                        <p className=" whitespace-no-wrap">
                           {new Date(item.createdAt).toLocaleDateString(
                             "vi-VN",
                             {
@@ -86,36 +89,34 @@ export const DataTableTags = ({ data, refetch, onEditTags }) => {
                           )}
                         </p>
                       </td>
-                      <td className="px-5 py-5 flex items-center text-sm bg-white border-b border-gray-200 space-x-5">
-                        <button
-                          disabled={isLoadingDeleteTags}
-                          type="button"
-                          className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
-                          onClick={() => mutateDeleteTags({ tagId: item?._id })}
-                        >
-                          Xoá
-                        </button>
-                        <button
-                          onClick={() => onEditTags(item._id, item.title)}
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          Edit
-                        </button>
+                      <td className="px-5 py-5 flex items-center text-sm  justify-center border-b border-gray-200">
+                        <div className="items-center justify-center flex gap-x-2">
+                          <div className="bg-red-500 text-white font-bold px-3 py-2 rounded-lg bg-opacity-100">
+                            <button
+                              disabled={isLoadingDeleteTags}
+                              type="button"
+                              className="hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
+                              onClick={() =>
+                                mutateDeleteTags({ tagId: item?._id })
+                              }
+                            >
+                              Xoá
+                            </button>
+                          </div>
+
+                          <button
+                            onClick={() => onEditTags(item._id, item.title)}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Edit
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
-            {/* {!isLoading && (
-               <Pagination
-                 onPageChange={(page) => setCurrentPage(page)}
-                 currentPage={currentPage}
-                 // totalPageCount={JSON.parse(
-                 //   postsData?.headers?.["x-totalpagecount"]
-                 // )}
-               />
-             )} */}
           </div>
         </div>
       </div>

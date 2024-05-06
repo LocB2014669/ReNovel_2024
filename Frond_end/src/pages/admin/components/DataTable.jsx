@@ -3,6 +3,7 @@ import React from "react";
 import { deleteCategory } from "../../../services/index/postCategory";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { ButtonCreate } from "../srceens/categoryPost/container/ButtonCreate";
 
 export const DataTable = ({ categoryData, refetch }) => {
   console.log(categoryData, "testtttttttttt");
@@ -23,34 +24,35 @@ export const DataTable = ({ categoryData, refetch }) => {
       },
     });
   return (
-    <div className="container lg:px-4 mx-auto sm:px-8 lg:w-2/3 w-full">
+    <div className="container lg:px-4 mx-auto w-full">
       {/* max-w-3xl */}
       <div className="py-8">
         <div className="flex lg:flex-row flex-col justify-between w-full mb-1 sm:mb-0">
           <h2 className="lg:text-2xl text-xl mb-3 lg:mb-0 leading-tight text-violet">
             Danh Sách Category
           </h2>
+          <ButtonCreate refetch={refetch} />
         </div>
         <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal table-auto">
               <thead>
-                <tr>
+                <tr className="dark:text-dark-light dark:bg-base-200 text-gray-800 bg-white">
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left uppercase border-b border-gray-200"
                   >
                     Tên Thể Loại
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 "
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left uppercase border-b border-gray-200 "
                   >
                     Thời Gian Tạo
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left uppercase border-b border-gray-200"
                   ></th>
                 </tr>
               </thead>
@@ -67,14 +69,17 @@ export const DataTable = ({ categoryData, refetch }) => {
                   </td>
                 ) : (
                   categoryData?.data?.map((item) => (
-                    <tr key={item._id}>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 ">
+                    <tr
+                      key={item._id}
+                      className="text-gray-900 dark:text-dark-light bg-white dark:bg-base-200 "
+                    >
+                      <td className="px-5 py-5 text-sm border-b border-gray-200 ">
                         <div className="truncate">
                           <p>{item.title}</p>
                         </div>
                       </td>
-                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200">
-                        <p className="text-gray-900 whitespace-no-wrap">
+                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap border-b border-gray-200">
+                        <p className=" whitespace-no-wrap">
                           {new Date(item.createdAt).toLocaleDateString(
                             "vi-VN",
                             {
@@ -85,23 +90,27 @@ export const DataTable = ({ categoryData, refetch }) => {
                           )}
                         </p>
                       </td>
-                      <td className="px-5 py-5 flex items-center text-sm bg-white border-b border-gray-200 space-x-5">
-                        <button
-                          disabled={isLoadingDeleteCategory}
-                          type="button"
-                          className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
-                          onClick={() =>
-                            mutateDeleteCategory({ categoryId: item?._id })
-                          }
-                        >
-                          Xoá
-                        </button>
-                        <Link
-                          to={`/admin/category/edit/${item._id}`}
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          Edit
-                        </Link>
+                      <td className="px-5 py-5 flex items-center text-sm  justify-center border-b border-gray-200">
+                        <div className="items-center justify-center flex gap-x-2">
+                          <div className="bg-red-500 text-white font-bold px-3 py-2 rounded-lg bg-opacity-100">
+                            <button
+                              disabled={isLoadingDeleteCategory}
+                              type="button"
+                              className="hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
+                              onClick={() =>
+                                mutateDeleteCategory({ categoryId: item?._id })
+                              }
+                            >
+                              Xoá
+                            </button>
+                          </div>
+                          <Link
+                            to={`/admin/category/edit/${item._id}`}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Edit
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))

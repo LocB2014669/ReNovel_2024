@@ -45,7 +45,7 @@ export const EditCategoryPage = () => {
 
   console.log(categoryData, "categoryData");
   return (
-    <div className="w-full">
+    <div className="w-full h-screen">
       <input
         type="text"
         defaultValue={
@@ -60,7 +60,7 @@ export const EditCategoryPage = () => {
         onClick={() =>
           mutateUpdateCategory({ categoryId: categoryId, title: valueTitle })
         }
-        className="outline-none border border-primary px-3 py-2 rounded-xl mt-5"
+        className="outline-none border border-violet hover:bg-violet hover:bg-opacity-20 px-3 py-2 rounded-xl mt-5"
       >
         Cập Nhật
       </button>

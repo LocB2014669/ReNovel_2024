@@ -30,9 +30,9 @@ export const TagsManage = () => {
       },
       onSuccess: () => {
         toast.success("Đã tạo Tags thành công");
-        setNewTags(""); // Reset giá trị input
-        
-        refetch(); // Fetch lại dữ liệu categories sau khi tạo thành công
+        setNewTags("");
+
+        refetch();
       },
       onError: (error) => {
         toast.error(error.message);
@@ -47,9 +47,9 @@ export const TagsManage = () => {
       });
     },
     onSuccess: () => {
-      toast.success("Đã chỉnh sữa thành công");
+      toast.success("Đã chỉnh sửa thành công");
       setNewTags("");
-      editTagsData(null);
+      setEditTagsData(null);
       refetch();
     },
     onError: (error) => {
@@ -61,27 +61,30 @@ export const TagsManage = () => {
     setEditTagsData({ tagId, tagTitle });
     setNewTags(tagTitle);
   };
-  console.log(editTagsData, "edit");
-  console.log(newTags, "setnewwwwwww");
+
+  const submitEditTags = () => {
+    mutateEditTags({
+      tagId: editTagsData.tagId,
+      title: newTags,
+    });
+    setNewTags("");
+    setEditTagsData(null);
+  };
+
   return (
     <div className="max-w-full lg:flex lg:gap-x-3 block h-[100vh]">
       <div className="py-8 lg:h-12 lg:w-1/3 w-full">
         <input
           type="text"
           placeholder="Nhập tên Tags"
-          defaultValue={editTagsData ? editTagsData.tagTitle : ""}
+          value={newTags}
           onChange={(e) => setNewTags(e.target.value)}
-          className="border-violet px-2 py-3 w-full rounded-lg mb-5"
+          className="border-violet px-2 py-3 w-full rounded-lg mb-5 border"
         />
-        {editTagsData !==null? (
+        {editTagsData !== null ? (
           <button
             className="w-full px-3 py-3 border-violet bg-violet text-white border-4 font-bold rounded-lg duration-200"
-            onClick={() =>
-              mutateEditTags({
-                tagId: editTagsData.tagId,
-                title: newTags,
-              })
-            }
+            onClick={submitEditTags}
             disabled={isLoadingEditTags}
           >
             Chỉnh Sữa

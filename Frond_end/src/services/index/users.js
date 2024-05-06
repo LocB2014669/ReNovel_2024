@@ -14,6 +14,19 @@ export const signup = async ({ name, email, password }) => {
     throw new Error(error.message);
   }
 };
+export const verifiedOTP = async ({ email, otp }) => {
+  try {
+    const { data } = await axios.post("/api/users/verifyOTP", {
+      email,
+      otp,
+    });
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};
 
 export const login = async ({ email, password }) => {
   try {
@@ -88,9 +101,9 @@ export const updateProfileAvatar = async ({ token, formData }) => {
   }
 };
 
-export const getAllUsers = async () => {
+export const getAllUsers = async ({ email }) => {
   try {
-    const { data } = await axios.get(`/api/users/`);
+    const { data } = await axios.get(`/api/users?email=${email}`);
 
     if (data) {
       return data;

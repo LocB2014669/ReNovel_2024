@@ -32,18 +32,18 @@ const Comment = ({
   const replyUserId = comment.user._id;
   // console.log(comment, "comment");
   return (
-    <div className="flex flex-nowrap items-start gap-x-3 bg-[#fff] lg:p-3 rounded-lg">
+    <div className="flex flex-nowrap items-start gap-x-3 bg-[#fff] dark:bg-base-100 lg:p-3 rounded-lg">
       <img
         src={
           comment?.user?.avatar
             ? stable.UPLOAD_FOLDER_BASE_URL + comment.user.avatar
-            : images.Yae
+            : images.UserLogo
         }
-        className="w-10 h-10 object-cover rounded-full"
+        className={`w-10 h-10 object-cover rounded-full ${comment.user.avatar ? "" : "border-2 border-violet"}`}
         alt="userComment"
       />
       <div className="flex flex-1 flex-col">
-        <h5 className="font-bold text-dark-hard text-sm">
+        <h5 className="font-bold text-dark-hard dark:text-dark-light text-sm">
           {comment.user.name}
         </h5>
         <span className="text-xs text-dark-light">

@@ -12,7 +12,7 @@ export const authGuard = async (req, res, next) => {
       req.user = await User.findById(id).select("-password");
       next();
     } catch (error) {
-      let err = new Error("Không thể xác thực token");
+      let err = new Error("Bạn cần phải đăng nhập trước");
       err.statusCode = 401;
       next(err);
     }

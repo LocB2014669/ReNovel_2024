@@ -1,5 +1,5 @@
 ul {
-  list-style: disc;
+  list-style: none;
   margin: auto;
   padding: auto;
 }
@@ -86,4 +86,35 @@ h6 {
   transition-duration: 300ms;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.owl-stage-outer {
+  border-radius: 17px 0 17px 0;
+}
+.owl-nav {
+  position: absolute;
+  top: -66px;
+  right: 0px;
+  /* font-size: 50px; */
+  padding: 10px 15px !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.owl-theme .owl-nav [class*="owl-"] {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 36px !important;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.owl-theme .owl-nav [class*="owl-"]:hover {
+  background-color: rgba(238, 130, 238, 0.5) !important;
+  /* padding: 10px 40px; */
+  border-radius: 50%;
+  color: violet;
+  opacity: 1;
 }

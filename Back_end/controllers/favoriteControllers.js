@@ -6,13 +6,11 @@ const createFavorite = async (req, res) => {
   try {
     const { postId } = req.params;
 
-    // Kiểm tra xem yêu thích đã tồn tại hay chưa
     const existingFavorite = await Favorite.findOne({
       user: req.user._id,
     });
 
     if (existingFavorite) {
-      // Kiểm tra xem bài viết đã tồn tại trong mảng favorites hay chưa
       if (existingFavorite.data.includes(postId)) {
         existingFavorite.data.pull(postId);
         await existingFavorite.save();
@@ -48,21 +46,25 @@ const createFavorite = async (req, res) => {
 const getPostFavorite = async (req, res) => {
   try {
     const { userId } = req.params;
-    const favorites = await Favorite.findOne({ user: userId })
-      .populate({
-        path: "data",
-        select: [
-          "title",
-          "caption",
-          "body",
-          "photo",
-          "slug",
-          "checked",
-          "averageRating",
-          "createdAt",
-        ],
-      })
-      .populate("user", "name");
+    const favorites = await Favorite.findOne({ user: userId }).populate({
+      path: "data",
+      select: [
+        "title",
+        "caption",
+        "body",
+        "photo",
+        "slug",
+        "checked",
+        "averageRating",
+        "createdAt",
+        "user",
+      ],
+      populate: {
+        path: "user",
+        select: "name",
+      },
+    });
+    // .populate("user", "name");
 
     res.status(200).json(favorites);
   } catch (error) {
@@ -74,7 +76,7 @@ export { createFavorite, getPostFavorite };
 
 export const getFavoritesByPostId = async (req, res, next) => {
   try {
-    const postId = req.params.postId; // Assuming post ID is available in req.params.postId
+    const postId = req.params.postId;
 
     const favorites = await Favorite.find({ data: postId }).populate("user", [
       "avatar",

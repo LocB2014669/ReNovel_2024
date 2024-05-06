@@ -84,6 +84,7 @@ export const ProfileAvatar = ({ avatar, checkEdit }) => {
             onChange={handlerFile}
             type="file"
             id="avatar"
+            disabled={!checkEdit}
             className="sr-only"
           />
         </div>

@@ -9,6 +9,5 @@ export const filterCategory = (inputValue, categoryData) => {
     .filter((category) =>
       category.label.toLowerCase().includes(inputValue.toLowerCase())
     );
-  console.log(fileOptions, "fileOptions");
   return fileOptions;
 };

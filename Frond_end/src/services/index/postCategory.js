@@ -3,7 +3,6 @@ import axios from "axios";
 export const getAllCategory = async () => {
   try {
     const { data } = await axios.get(`/api/post-category`);
-    console.log(data, "test");
     return { data };
   } catch (error) {
     if (error.response && error.response.data.message)

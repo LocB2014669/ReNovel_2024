@@ -75,24 +75,31 @@ export const FillterArcticlePage = () => {
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const searchValue = new URLSearchParams(location.search).get("search");
   const tagsValue = new URLSearchParams(location.search).get("tags");
-
+  // searchKeyWord = "",
+  // page = 1,
+  // limit = 10,
+  // category = "",
+  // country = "",
+  // status = "",
+  // tags = "",
+  // sort = "",
   const {
     data: postsData,
     isLoading: isLoadingPost,
     refetch,
   } = useQuery({
     queryFn: () =>
-      getAllPosts(
-        searchValue ? searchValue : "",
-        currentPage,
-        10,
-        isCheckTypePost,
-        isCheckCountry,
-        isCheckStatus,
-        tagsValue ? tagsValue : "",
-        isCheckSort
-      ),
-    queryKey: ["fillterPosts"],
+      getAllPosts({
+        searchKeyWord: searchValue ? searchValue : "",
+        page: currentPage,
+        limit: 10,
+        category: isCheckTypePost,
+        country: isCheckCountry,
+        status: isCheckStatus,
+        tags: tagsValue ? tagsValue : "",
+        sort: isCheckSort,
+      }),
+    queryKey: ["PostsFilter"],
     onError: (error) => {
       toast.error(error.message);
       console.log(error);
@@ -170,7 +177,7 @@ export const FillterArcticlePage = () => {
               <select
                 onChange={(e) => handleStatus(e.target.value)}
                 value={isCheckStatus}
-                className="block py-2.5 px-5 m-3 w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                className="dark:bg-base-100 block py-2.5 px-5 m-3 w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
               >
                 <option value="">Tất cả</option>
                 {dataPostStatus.map((item) => (
@@ -188,7 +195,7 @@ export const FillterArcticlePage = () => {
               <select
                 onChange={(e) => handleCountry(e.target.value)}
                 value={isCheckCountry}
-                className="block py-2.5 px-5 m-3 w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                className=" dark:bg-base-100  block py-2.5 px-5 m-3 w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
               >
                 <option value="">Tất cả</option>
                 {dataCountry.map((item) => (
@@ -206,7 +213,7 @@ export const FillterArcticlePage = () => {
               <select
                 onChange={(e) => handleType(e.target.value)}
                 value={isCheckTypePost}
-                className="block py-2.5 px-5 m-3 w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                className="dark:bg-base-100  block py-2.5 px-5 m-3 w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
               >
                 <option value="">Tất cả</option>
                 {categoryData?.data?.map((item, index) => (

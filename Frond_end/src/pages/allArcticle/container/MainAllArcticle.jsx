@@ -25,16 +25,16 @@ const MainAllArcticle = ({ postsData, dataUserPost }) => {
                 />
               </Link>
               <div className="flex flex-col gap-y-3 flex-grow lg:w-2/4">
-                <h1 className="text-2xl font-montserrat text-dark-hard font-bold ">
+                <h1 className="text-2xl font-montserrat font-bold ">
                   {item.title}
                 </h1>
                 <p className="font-bold text-sm w-full ">
                   Người đăng:{" "}
                   <span className="font-normal text-lg text-nowrap">
-                    {dataUserPost ? dataUserPost.name : item?.user?.name}
+                    {item?.user?.name}
                   </span>{" "}
                 </p>
-                <p className="text-gray-900 text-nowrap font-bold text-sm w-full">
+                <p className="text-gray-900 dark:text-gray-200 text-nowrap font-bold text-sm w-full">
                   Thời Điểm:
                   <span className="text-nowrap font-normal ml-2">
                     {" "}

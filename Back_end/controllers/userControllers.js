@@ -3,6 +3,7 @@ import Comment from "../models/Comment";
 import Post from "../models/Post";
 import User from "../models/User";
 import fileRemove from "../utils/fileRemove";
+import { generateOTP, sendOTP } from "../utils/otpUtils";
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -15,13 +16,27 @@ export const registerUser = async (req, res, next) => {
       // return res.status(400).json({ message: "Email đã được đăng ký" });
       throw new Error("Email đã được đăng ký");
     }
+    // const verifiedUser = await User.findOne({ email, verified: true });
 
-    // create New
+    // if (!verifiedUser) {
+    //   throw new Error("Email chưa được xác thực");
+    // }
+
+    // Tạo mã OTP và lưu vào cơ sở dữ liệu
+    const otp = generateOTP();
+    const otpExpires = new Date(new Date().getTime() + 1 * 60 * 1000);
+
+    // Tạo mới người dùng và lưu vào cơ sở dữ liệu
     user = await User.create({
       name,
       email,
       password,
+      otp,
+      otpExpires,
     });
+
+    // Gửi mã OTP qua email
+    sendOTP(email, otp);
 
     return res.status(201).json({
       _id: user._id,
@@ -31,7 +46,38 @@ export const registerUser = async (req, res, next) => {
       verified: user.verified,
       admin: user.admin,
       check: user.check,
+      points: user.points,
       token: await user.generateJWT(),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verifyOTP = async (req, res, next) => {
+  try {
+    const { email, otp } = req.body;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("Không tìm thấy người dùng");
+    }
+
+    if (user.otp !== otp || new Date() > user.otpExpires) {
+      // Xóa tài khoản nếu OTP đã hết hạn
+      if (new Date() > user.otpExpires) {
+        await User.deleteOne({ email });
+        throw new Error("OTP đã hết hạn. Tài khoản đã được xóa.");
+      }
+      throw new Error("OTP không hợp lệ");
+    }
+
+    user.verified = true;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Xác nhận OTP thành công",
     });
   } catch (error) {
     next(error);
@@ -57,6 +103,7 @@ export const loginUser = async (req, res, next) => {
         verified: user.verified,
         admin: user.admin,
         check: user.check,
+        points: user.points,
         token: await user.generateJWT(),
       });
     } else {
@@ -79,6 +126,7 @@ export const userProfile = async (req, res, next) => {
         email: user.email,
         verified: user.verified,
         admin: user.admin,
+        check: user.check,
       });
     } else {
       let error = new Error("Khong tim thay tai khoan");
@@ -116,6 +164,7 @@ export const updateProfile = async (req, res, next) => {
       email: updateUserProfile.email,
       check: updateUserProfile.check,
       admin: updateUserProfile.admin,
+      verified: updateUserProfile.verified,
       token: await updateUserProfile.generateJWT(),
     });
   } catch (error) {
@@ -148,6 +197,7 @@ export const updateProfileAvatar = async (req, res, next) => {
             email: updateUser.email,
             verified: updateUser.verified,
             admin: updateUser.admin,
+            check: updateUser.check,
             token: await updateUser.generateJWT(),
           });
         } else {
@@ -164,6 +214,7 @@ export const updateProfileAvatar = async (req, res, next) => {
             email: updateUser.email,
             verified: updateUser.verified,
             admin: updateUser.admin,
+            check: updateUser.check,
             token: await updateUser.generateJWT(),
           });
         }
@@ -176,7 +227,15 @@ export const updateProfileAvatar = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find({}).sort({ check: -1 });
+    const { email } = req.query;
+
+    let query = {};
+
+    if (email) {
+      query = { email: { $regex: email, $options: "i" } };
+    }
+    const users = await User.find(query).sort({ admin: -1 });
+
     return res.json(users);
   } catch (error) {
     next(error);

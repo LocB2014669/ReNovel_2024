@@ -20,8 +20,16 @@ const LoginPage = () => {
       return login({ email, password });
     },
     onSuccess: (data) => {
+      setTimeout(() => {
+        if (data.admin) {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
+      }, 1000);
       dispatch(userActions.setUserInfo(data));
       localStorage.setItem("account", JSON.stringify(data));
+      toast.success("Đăng Nhập Thành Công");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -29,11 +37,11 @@ const LoginPage = () => {
     },
   });
 
-  useEffect(() => {
-    if (userState.userInfo) {
-      navigate("/");
-    }
-  }, [navigate, userState.userInfo]);
+  // useEffect(() => {
+  //   if (userState?.userInfo?.verified) {
+  //     navigate("/");
+  //   }
+  // }, [navigate, userState.userInfo]);
 
   const {
     register,
@@ -51,7 +59,6 @@ const LoginPage = () => {
     const { email, password } = data;
     mutate({ email, password });
   };
-
 
   return (
     <MainLayout>
@@ -83,7 +90,7 @@ const LoginPage = () => {
                   },
                 })}
                 placeholder="Enter email"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
+                className={`placeholder:text-[#959ead] dark:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
                   errors.email ? "border-red-500" : "border-[#c3cad9]"
                 }`}
               />
@@ -114,7 +121,7 @@ const LoginPage = () => {
                   },
                 })}
                 placeholder="Enter password"
-                className={`placeholder:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
+                className={`placeholder:text-[#959ead] dark:text-[#959ead] text-dark-hard mt-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
                   errors.password ? "border-red-500" : "border-[#c3cad9]"
                 }`}
               />

@@ -9,6 +9,7 @@ import {
   updateProfile,
   updateProfileAvatar,
   userProfile,
+  verifyOTP,
 } from "../controllers/userControllers";
 
 import { authGuard } from "../middleware/authMiddleware";
@@ -23,4 +24,5 @@ router.put("/updateProfileAvatar", authGuard, updateProfileAvatar);
 router.get("/", getAllUsers);
 router.delete("/:userId", deleteUser);
 router.put("/check/:userId", updateCheck);
+router.post("/verifyOTP", verifyOTP);
 export default router;

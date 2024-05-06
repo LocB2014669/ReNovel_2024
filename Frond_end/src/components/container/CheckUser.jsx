@@ -11,7 +11,7 @@ export const CheckUser = () => {
   const queryClient = useQueryClient();
   const userState = useSelector((state) => state.user);
   let valueCheck = userState?.userInfo?.check;
-  // console.log(userState.userInfo.check);
+  // console.log(valueCheck);
 
   const { mutate: mutateUpdateCheck } = useMutation({
     mutationFn: ({ userId, check }) => {
@@ -38,7 +38,7 @@ export const CheckUser = () => {
   };
   return (
     <div>
-      {userState?.userInfo && (
+      {!userState?.userInfo?.admin && userState?.userInfo && (
         <button
           onClick={handlerCheck}
           disabled={valueCheck !== 0}

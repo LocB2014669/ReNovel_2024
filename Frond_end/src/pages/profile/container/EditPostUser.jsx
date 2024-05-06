@@ -140,7 +140,7 @@ export const EditPostUser = () => {
       setCountry(data?.country);
       setStatus(data?.status);
     }
-  }, [data, isError, isLoading]);
+  }, [isError, isLoading]);
 
   const changeFileHandler = (e) => {
     const file = e.target.files[0];
@@ -214,192 +214,239 @@ export const EditPostUser = () => {
           <ErroMessage message="Không tìm thấy dữ liệu" />
         ) : (
           <>
-            <h1 className="font-semibold text-xl text-violet my-2">
-              Tạo Và Chỉnh Sửa Bài Đánh Giá
-            </h1>
             <section className=" flex-col px-5 py-5 lg:flex lg:flex-row lg:gap-x-5 lg:items-start border border-primary rounded-lg ">
               <article className="flex-1">
-                <div className="w-full flex items-start gap-x-4 ">
-                  <div
-                    className={`relative rounded-lg outline-offset-2 outline-1 outline-primary overflow-hidden ${
-                      photo || statusPhoto ? "h-96 w-96" : "h-40 w-40 "
-                    }`}
-                  >
-                    <label
-                      htmlFor="postInputPhoto"
-                      className=" cursor-pointer absolute inset-0 rounded-full bg-transparent"
-                    >
-                      {photo ? (
-                        <img
-                          src={URL.createObjectURL(photo)}
-                          alt={data?.title}
-                          className="w-full object-cover "
-                        />
-                      ) : statusPhoto ? (
-                        <img
-                          src={`${stable.UPLOAD_FOLDER_BASE_URL}${data?.photo}`}
-                          alt={data?.title}
-                          className="w-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full rounded-xl min-h-16 bg-blue-50/50 flex justify-start items-center ">
-                          <AiOutlineCamera className="w-40 h-auto text-primary" />
-                        </div>
-                      )}
-                    </label>
-                    <input
-                      type="file"
-                      className="sr-only"
-                      id="postInputPhoto"
-                      onChange={changeFileHandler}
-                    />
-                  </div>
-                  {photo || statusPhoto ? (
-                    <button
-                      onClick={handlerDeletePhoto}
-                      className="border border-red-500 rounded-lg py-2 text-xl px-4 text-red-500 "
-                    >
-                      Xóa Ảnh
-                    </button>
-                  ) : (
-                    <div className="border border-violet px-4 py-2 rounded-lg">
-                      <p className="font-semibold text-primary">
-                        Chọn Ảnh Cho Bài Đánh Giá
-                      </p>
-                    </div>
-                  )}
-                </div>
                 {data && (
                   <>
-                    <div className="form-control flex-row items-center w-full mt-4 gap-x-3">
-                      <label
-                        htmlFor="postTitleInput"
-                        className="font-semibold text-lg"
-                      >
-                        Tên Tiêu Đề:{" "}
-                      </label>
-                      <input
-                        id="postTitleInput"
-                        placeholder={data.title}
-                        required
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="px-4 py-2 rounded-lg w-1/2 border border-slate-300 focus:border-violet outline-none text-xl font-montserrat  text-dark-hard font-bold"
-                      />
-                    </div>
-
-                    <div className="form-control flex-row items-center w-full mt-4 gap-x-3">
-                      <label
-                        htmlFor="idPostCaption"
-                        className="font-semibold text-lg"
-                      >
-                        Giới Thiệu Tác Phẩm:{" "}
-                      </label>
-                      <textarea
-                        required
-                        cols="30"
-                        rows="10"
-                        id="idPostCaption"
-                        placeholder={data.caption}
-                        value={caption}
-                        onChange={(e) => setCaption(e.target.value)}
-                        className="px-4 py-2 rounded-lg w-1/2 border border-slate-300 focus:border-violet outline-none text-xl font-montserrat  text-dark-hard font-bold"
-                      ></textarea>
-                    </div>
-
-                    <div className="mt-10 flex flex-row items-center w-full">
-                      {!isLoading && !isError && (
-                        <>
+                    <div className="flex gap-x-2 justify-between">
+                      <div className="w-1/2 border-r p-4">
+                        <div className="mt-2 flex flex-row items-center justify-between w-full">
                           <label
                             htmlFor="postTitleInput"
-                            className="font-semibold text-lg"
+                            className="font-semibold text-lg text-nowrap font-opensans"
                           >
-                            Chọn thể loại:{" "}
+                            Tên Tiêu Đề:{" "}
                           </label>
-                          <SelectMultiple
-                            required
-                            loadOptions={promiseOptions}
-                            defaultValue={data?.category.map(categoryOption)}
-                            onchange={(newValue) =>
-                              setCategory(newValue.map((item) => item.value))
-                            }
+                          <input
+                            id="postTitleInput"
+                            placeholder={data.title}
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className="px-4 py-2 w-full border-0 border-b-2 border-slate-300 focus:border-violet outline-none text-lg font-montserrat text-dark-hard dark:bg-base-100 dark:text-dark-light"
                           />
-                        </>
-                      )}
-                    </div>
-                    <div className="mt-10 flex flex-row items-center w-full">
-                      <label
-                        htmlFor="countrySelect"
-                        className="font-semibold text-lg"
-                      >
-                        Quốc gia:{" "}
-                      </label>
-                      <select
-                        id="countrySelect"
-                        value={country}
-                        onChange={(event) => setCountry(event.target.value)}
-                        className="px-4 py-2 rounded-lg border border-slate-300 focus:border-violet outline-none text-xl font-montserrat text-dark-hard font-bold"
-                      >
-                        <option value="">Chọn quốc gia</option>
-                        {dataCountry.map((item) => (
-                          <option key={item.id} value={item.title}>
-                            {item.title}
-                          </option>
-                        ))}
-                      </select>
+                        </div>
+                        <div className="mt-2 flex flex-row items-center justify-between w-full">
+                          {!isLoading && !isError && (
+                            <>
+                              <label
+                                htmlFor="postTitleInput"
+                                className="font-semibold text-lg text-nowrap font-opensans"
+                              >
+                                Chọn thể loại:{" "}
+                              </label>
+                              <SelectMultiple
+                                loadOptions={promiseOptions}
+                                defaultValue={data?.category.map(
+                                  categoryOption
+                                )}
+                                onchange={(newValue) =>
+                                  setCategory(
+                                    newValue.map((item) => item.value)
+                                  )
+                                }
+                              />
+                            </>
+                          )}
+                        </div>
+                        <div className="mt-2 flex flex-row items-center justify-between w-full">
+                          <label
+                            htmlFor="countrySelect"
+                            className="font-semibold text-lg text-nowrap font-opensans"
+                          >
+                            Quốc gia:{" "}
+                          </label>
+                          <select
+                            id="countrySelect"
+                            value={country}
+                            onChange={(event) => setCountry(event.target.value)}
+                            className="px-4 w-full py-2 border-0 border-b-2 border-slate-300 focus:border-violet outline-none text-lg font-montserrat text-dark-hard dark:bg-base-100 dark:text-dark-light"
+                          >
+                            <option value="">Chọn quốc gia</option>
+                            {dataCountry.map((item) => (
+                              <option key={item.id} value={item.title}>
+                                {item.title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        {/* PhoTo Post */}
+                        <div className="w-full my-3">
+                          <p className="font-semibold text-lg text-nowrap font-opensans mb-2">
+                            Chọn ảnh bài đăng:
+                          </p>
+
+                          <div
+                            className={`relative rounded-lg outline-offset-2 outline-1 outline-primary  ${
+                              photo || statusPhoto ? "h-64 w-[400px] flex item-center gap-x-3" : "w-full"
+                            }`}
+                          >
+                            <label
+                              htmlFor="postInputPhoto"
+                              className=" cursor-pointer inset-0 rounded-full bg-transparent"
+                            >
+                              {photo ? (
+                                <img
+                                  src={URL.createObjectURL(photo)}
+                                  alt={data?.title}
+                                  className="w-full object-cover "
+                                />
+                              ) : statusPhoto ? (
+                                <img
+                                  src={`${stable.UPLOAD_FOLDER_BASE_URL}${data?.photo}`}
+                                  alt={data?.title}
+                                  className="w-full object-cover"
+                                />
+                              ) : (
+                                <div class="flex items-center justify-center w-full">
+                                  <label
+                                    for="postInputPhoto"
+                                    class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                                  >
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                      <svg
+                                        class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 20 16"
+                                      >
+                                        <path
+                                          stroke="currentColor"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                        />
+                                      </svg>
+                                      <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                        <span class="font-semibold">
+                                          Click Chọn Ảnh
+                                        </span>{" "}
+                                        Hoặc Kéo Thả
+                                      </p>
+                                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        PNG, JPG, JPEG
+                                      </p>
+                                    </div>
+                                    <input
+                                      id="dropzone-file"
+                                      type="file"
+                                      class="hidden"
+                                    />
+                                  </label>
+                                </div>
+                              )}
+                            </label>
+                            {photo || statusPhoto ? (
+                              <div className="">
+                                {" "}
+                                <button
+                                  onClick={handlerDeletePhoto}
+                                  className="border border-red-500 rounded-lg py-2 text-lg px-4 bg-red-500 bg-opacity-20 duration-200 text-red-500 font-bold hover:bg-transparent hover:text- "
+                                >
+                                  Xóa Ảnh
+                                </button>
+                              </div>
+                            ) : (
+                              ""
+                            )}
+                            <input
+                              type="file"
+                              className="sr-only"
+                              id="postInputPhoto"
+                              onChange={changeFileHandler}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="w-1/2 p-1">
+                        <div className="form-control w-full mt-4 gap-x-3">
+                          <label
+                            htmlFor="idPostCaption"
+                            className="font-semibold text-lg text-nowrap font-opensans"
+                          >
+                            Giới Thiệu Tác Phẩm:{" "}
+                          </label>
+                          <textarea
+                            cols="90"
+                            rows="10"
+                            id="idPostCaption"
+                            placeholder={data.caption}
+                            value={caption}
+                            onChange={(e) => setCaption(e.target.value)}
+                            className="dark:bg-base-100 dark:text-dark-light resize-none px-4 py-2 rounded-lg border border-slate-300 focus:border-violet outline-none text-lg font-opensans text-dark-hard"
+                          ></textarea>
+                        </div>
+                        <div className="mt-10 flex flex-row items-center w-full">
+                          <label
+                            htmlFor="tagsSelect"
+                            className="font-semibold text-lg font-opensans"
+                          >
+                            Tags:{" "}
+                          </label>
+                          <select
+                            id="tagsSelect"
+                            value={tags}
+                            onChange={(event) => setTags(event.target.value)}
+                            className="dark:bg-base-100 dark:text-dark-light px-4 py-2 border-0 border-b-2 border-slate-300 focus:border-violet outline-none text-lg font-montserrat text-dark-hard"
+                          >
+                            <option value="">Chọn Tags</option>
+                            {dataTags.map((item) => (
+                              <option key={item._id} value={item._id}>
+                                {item.title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="mt-10 flex flex-row items-center w-full">
+                          <label
+                            htmlFor="statusSelect"
+                            className="font-semibold text-lg font-opensans text-nowrap"
+                          >
+                            Trạng thái:{" "}
+                          </label>
+                          <select
+                            id="statusSelect"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                            className="dark:bg-base-100 dark:text-dark-light px-4 py-2 border-0 border-b-2 border-slate-300 focus:border-violet outline-none text-lg font-montserrat text-dark-hard"
+                          >
+                            <option value="">Chọn trạng thái</option>
+                            {dataPostStatus.map((item) => (
+                              <option key={item.id} value={item.title}>
+                                {item.title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="mt-10 flex flex-row items-center w-full">
-                      <label
-                        htmlFor="tagsSelect"
-                        className="font-semibold text-lg"
-                      >
-                        Tags:{" "}
-                      </label>
-                      <select
-                        id="tagsSelect"
-                        value={tags}
-                        onChange={(event) => setTags(event.target.value)}
-                        className="px-4 py-2 rounded-lg border border-slate-300 focus:border-violet outline-none text-xl font-montserrat text-dark-hard font-bold"
-                      >
-                        <option value="">Chọn Tags</option>
-                        {dataTags.map((item) => (
-                          <option key={item._id} value={item._id}>
-                            {item.title}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="mt-10 flex flex-row items-center w-full">
-                      <label
-                        htmlFor="statusSelect"
-                        className="font-semibold text-lg"
-                      >
-                        Trạng thái:{" "}
-                      </label>
-                      <select
-                        id="statusSelect"
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                        className="px-4 py-2 rounded-lg border border-slate-300 focus:border-violet outline-none text-xl font-montserrat text-dark-hard font-bold"
-                      >
-                        <option value="">Chọn trạng thái</option>
-                        {dataPostStatus.map((item) => (
-                          <option key={item.id} value={item.title}>
-                            {item.title}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="w-full mt-10">
+                    <div className="w-full mt-24">
                       {!isLoading && !isError && (
-                        <Editor
-                          content={data?.body}
-                          editable={true}
-                          onDataChange={(data) => {
-                            setBody(data);
-                          }}
-                        />
+                        <>
+                          <p className="font-semibold text-lg text-nowrap font-opensans mb-2">
+                            Nội Dung Đánh Giá
+                          </p>
+                          <Editor
+                            content={data?.body}
+                            editable={true}
+                            onDataChange={(data) => {
+                              setBody(data);
+                            }}
+                          />
+                        </>
                       )}
                     </div>
 

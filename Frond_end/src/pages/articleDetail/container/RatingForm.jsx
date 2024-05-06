@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-const RatingForm = ({ postId, averageRating, ref }) => {
+const RatingForm = ({ postId, averageRating, refetchIsRating }) => {
   const userState = useSelector((state) => state.user);
   //   console.log(token, "tao nla");
   const [score, setScore] = useState(0);
@@ -41,7 +41,7 @@ const RatingForm = ({ postId, averageRating, ref }) => {
         console.log("Đánh giá đã được tạo thành công", data);
         toast.success("Đánh giá đã được tạo thành công", data);
         refetch();
-        ref();
+        refetchIsRating();
       },
     });
 
@@ -54,7 +54,7 @@ const RatingForm = ({ postId, averageRating, ref }) => {
       score: selectedScore,
     });
     refetch();
-    ref();
+    refetchIsRating();
   };
 
   const renderStarRating = () => {

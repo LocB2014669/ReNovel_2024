@@ -8,7 +8,7 @@ const Navitem = ({title, icon, name, link, navName, setNavName}) => {
       to={link}
       className={`${
         name === navName
-          ? "font-bold text-primary"
+          ? "font-bold text-violet"
           : "font-semibold text-gray-500"
       } flex items-center gap-x-2 text-lg mt-3`}
       onClick={() => setNavName(name)}

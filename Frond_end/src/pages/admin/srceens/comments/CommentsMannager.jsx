@@ -12,44 +12,29 @@ import { stable } from "../../../../constants";
 export const CommentsMannager = () => {
   const userState = useSelector((state) => state.user);
   const [isCheckDisplay, setIsCheckDisplay] = useState(false);
-  const [commentIds, setCommentIds] = useState([]);
+  // const [commentIds, setCommentIds] = useState([]);
   const [valueSearch, setValueSearch] = useState("");
   const {
     data: commentsData,
     isLoading,
     refetch,
   } = useQuery({
-    queryFn: () => getAllComments({ valueSearch }),
-    queryKey: ["comments", valueSearch],
+    queryFn: () => getAllComments({ valueSearch: valueSearch }),
+    queryKey: ["comments"],
     onError: (error) => {
       toast.error(error.message);
       console.log(error);
     },
   });
 
-  console.log(commentsData, "commentsData");
-  const submitSearchKeyWord = () => {
+  const searchKeyWordHandler = (e) => {
+    const { value } = e.target;
+    setValueSearch(value);
+  };
+  const submitSearchKeyWord = (e) => {
     e.preventDefault();
     refetch();
   };
-
-  // checkComments
-  const { mutate: mutateUpdateCheck, isLoading: isLoadingUpdateCheck } =
-    useMutation({
-      mutationFn: ({ commentIds }) => {
-        return checkComments({
-          commentIds: commentIds,
-        });
-      },
-      onSuccess: (data) => {
-        refetch();
-        toast.success("Comments đã được cập nhật");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-        console.log(error);
-      },
-    });
 
   //     DeleteComment
   const { mutate: mutateDeleteComment, isLoading: isLoadingDeleteComment } =
@@ -69,20 +54,20 @@ export const CommentsMannager = () => {
         console.log(error);
       },
     });
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
-    setCommentIds([...commentIds, value]);
+  // const handleCheckboxChange = (e) => {
+  //   const { value, checked } = e.target;
+  //   setCommentIds([...commentIds, value]);
 
-    setIsCheckDisplay(true);
-  };
+  //   setIsCheckDisplay(true);
+  // };
 
-  const handleUpdate = () => {
-    mutateUpdateCheck({
-      commentIds: commentIds,
-    });
-    refetch();
-    //     window.location.reload();
-  };
+  // const handleUpdate = () => {
+  //   mutateUpdateCheck({
+  //     commentIds: commentIds,
+  //   });
+  //   refetch();
+  //   //     window.location.reload();
+  // };
 
   //   useEffect(() => {}, [refetch, isCheckDisplay, commentIds, valueSearch]);
   return (
@@ -95,15 +80,15 @@ export const CommentsMannager = () => {
           <div className="text-end">
             <form
               onSubmit={submitSearchKeyWord}
-              className="flex flex-col justify-center lg:w-3/4 max-w-sm space-y-3 w-full md:flex-row md:w-full md:space-x-3 md:space-y-0"
+              className="flex flex-col justify-center lg:w-full max-w-sm space-y-3 w-full md:flex-row md:w-full md:space-x-3 md:space-y-0"
             >
               <div className=" relative ">
                 <input
                   type="text"
                   id='"form-subscribe-Filter'
-                  className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  placeholder="Nhập tên bài đăng..."
-                  onChange={(e) => setValueSearch(e.target.value)}
+                  className="placeholder:text-sm rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white  text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  placeholder="Nhập nội dung bình luận..."
+                  onChange={searchKeyWordHandler}
                   value={valueSearch}
                 />
               </div>
@@ -120,40 +105,40 @@ export const CommentsMannager = () => {
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal">
               <thead>
-                <tr>
-                  <th
+                <tr className="dark:bg-base-200 bg-white text-gray-800  dark:text-dark-light">
+                  {/* <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left  uppercase  border-b border-gray-200"
                   >
                     Check
-                  </th>
+                  </th> */}
                   <th
                     scope="col"
-                    className="text-nowrap lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200"
+                    className="text-nowrap lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat lg:text-left  uppercase  border-b border-gray-200"
                   >
                     Bài Đăng
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left  uppercase  border-b border-gray-200 w-1/6"
                   >
                     Người Dùng
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left  uppercase  border-b border-gray-200 w-1/6"
                   >
                     Thời Gian
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left  uppercase  border-b border-gray-200 w-1/6"
                   >
                     Nội Dung
                   </th>
                   <th
                     scope="col"
-                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left text-gray-800 uppercase bg-white border-b border-gray-200 w-1/6"
+                    className="lg:px-5 px-2  py-3 lg:text-sm text-[12px] font-montserrat text-center lg:text-left  uppercase  border-b border-gray-200 w-1/6"
                   ></th>
                 </tr>
               </thead>
@@ -170,8 +155,11 @@ export const CommentsMannager = () => {
                   </td>
                 ) : (
                   commentsData?.map((item) => (
-                    <tr key={item._id}>
-                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200 ">
+                    <tr
+                      key={item._id}
+                      className="dark:bg-base-200 bg-white text-gray-900 dark:text-dark-light"
+                    >
+                      {/* <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap  border-b border-gray-200 ">
                         <div className="relative flex items-center p-3 rounded-full cursor-pointer">
                           <input
                             className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-purple-500 checked:bg-purple-500 checked:before:bg-purple-500 hover:before:opacity-10"
@@ -197,8 +185,8 @@ export const CommentsMannager = () => {
                             </svg>
                           </span>
                         </div>
-                      </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 ">
+                      </td> */}
+                      <td className="px-5 py-5 text-sm  border-b border-gray-200 ">
                         <div className="flex items-center">
                           <div className="flex-shrink-0">
                             <a href="#" className="relative block">
@@ -215,7 +203,7 @@ export const CommentsMannager = () => {
                             </a>
                           </div>
                           <div className="ml-3 w-full truncate">
-                            <p className="text-gray-900 whitespace-no-wrap text-base italic hidden lg:block">
+                            <p className=" whitespace-no-wrap text-base italic hidden lg:block">
                               {item?.post?.title > 30
                                 ? `${item?.post?.photo.substring(0, 30)}...`
                                 : item?.post?.title}
@@ -223,12 +211,10 @@ export const CommentsMannager = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap bg-white border-b border-gray-200">
-                        <p className="text-gray-900 whitespace-no-wrap">
-                          {item.user.name}
-                        </p>
+                      <td className="px-5 py-5 lg:text-sm text-[12px] text-nowrap  border-b border-gray-200">
+                        <p className=" whitespace-no-wrap">{item.user.name}</p>
                       </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 text-nowrap">
+                      <td className="px-5 py-5 text-sm  border-b border-gray-200 text-nowrap">
                         <p className={`whitespace-no-wrap font-semibold`}>
                           {new Date(item.createdAt).toLocaleDateString(
                             "vi-VN",
@@ -240,25 +226,29 @@ export const CommentsMannager = () => {
                           )}
                         </p>
                       </td>
-                      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                      <td className="px-5 py-5 text-sm  border-b border-gray-200">
                         <span className="relative inline-block px-3 py-1 font-semibold w-70px text-wrap">
                           {item.desc}
                         </span>
                       </td>
-                      <td className="px-5 py-5 text-sm font-bold bg-white border-b border-gray-200 space-x-5">
-                        <button
-                          disabled={isLoadingDeleteComment}
-                          type="button"
-                          className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
-                          onClick={() =>
-                            mutateDeleteComment({
-                              token: userState?.userInfo?.token,
-                              commentId: item?._id,
-                            })
-                          }
-                        >
-                          Xoá
-                        </button>
+                      <td className="px-5 py-5 text-sm font-bold  border-b border-gray-200 space-x-5">
+                        <div className="flex items-center justify-center">
+                          <div className="bg-red-500 text-white px-3 py-2 rounded-lg bg-opacity-100 font-bold">
+                            <button
+                              disabled={isLoadingDeleteComment}
+                              type="button"
+                              className="hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed "
+                              onClick={() =>
+                                mutateDeleteComment({
+                                  token: userState?.userInfo?.token,
+                                  commentId: item?._id,
+                                })
+                              }
+                            >
+                              Xoá
+                            </button>
+                          </div>
+                        </div>
 
                         {/* <button
                           //      disabled={isLoadingDeleteUser}
@@ -280,7 +270,7 @@ export const CommentsMannager = () => {
               </tbody>
             </table>
           </div>
-          <div className="overflow-hidden">
+          {/* <div className="overflow-hidden">
             <div
               className={`w-full flex justify-end transition-transform duration-500 transform ${
                 isCheckDisplay ? "translate-y-0" : "translate-y-full"
@@ -293,7 +283,7 @@ export const CommentsMannager = () => {
                 Cập nhật
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
